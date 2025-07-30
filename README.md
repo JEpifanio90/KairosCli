@@ -1,6 +1,12 @@
-# KairosCli ⏳
+# KairosCli 📐
 
 **Kairos** (Pronounced: /ˈkaɪrɒs/, *KY-ross*) is an ancient Greek concept referring to the "opportune" or "right" moment.
+
+
+<div align="center">
+    <img src="./.github/media/logo.png" />
+</div>
+
 ---
 
 **Unleash the optimal state of your codebase with intelligent linting.**
