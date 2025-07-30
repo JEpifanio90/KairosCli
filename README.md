@@ -1,7 +1,6 @@
 # KairosCli ⏳
 
-**Kairos** (Pronounced: /ˈkaɪrɒs/, *KY-ross*) is an ancient Greek concept referring to the "opportune" or "right" moment. In the context of your codebase, KairosCli aims to identify and guide you to that perfect moment for optimal code quality.
-
+**Kairos** (Pronounced: /ˈkaɪrɒs/, *KY-ross*) is an ancient Greek concept referring to the "opportune" or "right" moment.
 ---
 
 **Unleash the optimal state of your codebase with intelligent linting.**
