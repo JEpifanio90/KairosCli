@@ -29,6 +29,10 @@ In large, complex codebases, adopting and maintaining consistent linting standar
 * **Fast & Reliable (Rust-Powered):** Built with Rust, KairosCli is designed for blazing-fast analysis, ensuring quick feedback cycles even on massive codebases.
 * **Open-Source Core:** The foundational CLI is open-source, fostering transparency, community contributions, and robust development. We believe in building in the open.
 
+<div align="center">
+    <img src="./.github/media/cli.png" />
+</div>
+
 ### 🎯 **The Kairos Vision (Future & Paid Features)**
 
 While we're starting with a powerful open-source CLI, the long-term vision for Kairos includes:
