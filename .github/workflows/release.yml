@@ -1,0 +1,56 @@
+# .github/workflows/release.yml
+
+name: Create Release Artifact
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    # Runs on the latest Ubuntu environment
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Build the Rust project in release mode
+      # The '--release' flag creates an optimized, production-ready binary
+      - name: Build Rust project
+        run: cargo build --verbose --release
+
+      # Step 3: Create the GitHub Release and upload the artifact
+      # We use a third-party action for this, as it's a common pattern.
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          # This token is automatically provided by GitHub and has permissions
+          # to create releases.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Use a simple version tag based on the run number for now.
+          # You can change this to a more formal versioning scheme later
+          # (e.g., using 'git-tag-action').
+          tag_name: v${{ github.run_number }}
+          name: KairosCli Release v${{ github.run_number }}
+          body: |
+            ## KairosCli Release
+
+            This is an automated release of the KairosCli artifact.
+
+            ### Instructions
+            * Download the artifact for your OS.
+            * Unzip the archive.
+            * Run the `kairos` executable from your terminal.
+
+          # The 'files' field specifies which artifacts to upload.
+          # Here, we target the release binary in the standard cargo output directory.
+          files: target/release/kairos
+

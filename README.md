@@ -14,7 +14,6 @@
 ### ✨ **Why KairosCli?**
 
 In large, complex codebases, adopting and maintaining consistent linting standards is a constant battle. Developers at all levels grapple with:
-
 * 🤔 **The "Best Practices" Guessing Game:** What are the truly optimal linting rules for *my* project? How do I keep them updated with the latest community standards and security recommendations?
 * 🚧 **Overwhelming Legacy Code:** How do I introduce stricter rules without drowning my team in thousands of new errors and warnings?
 * 📉 **Stagnant Code Quality:** Linting configurations often become outdated, leading to accumulating technical debt and inconsistent coding styles.
