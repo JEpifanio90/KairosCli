@@ -3,5 +3,9 @@ name = "kairos_cli"
 version = "1.0.0"
 edition = "2024"
 authors = ["Jose Epifanio"]
+description = "An AI-powered CLI for code analysis and refactoring."
+repository = "https://github.com/JEpifanio90/KairosCli"
+keywords = ["cli", "code-analysis", "ai", "rust"]
+license = "MIT"
 
 [dependencies]
