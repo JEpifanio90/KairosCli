@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: '18'
       - name: Install semantic-release dependencies
-        run: npm install semantic-release @semantic-release/exec @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
+        run: npm install semantic-release @semantic-release/exec @semantic-release/github @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator
       - name: Download kairos binary artifact
         uses: actions/download-artifact@v4
         with:
