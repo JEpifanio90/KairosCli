@@ -46,6 +46,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: kairos
+      - name: Install cargo-set-version
+        run: cargo install cargo-set-version
       - name: Semantic Release
         run: npx semantic-release
         env:
