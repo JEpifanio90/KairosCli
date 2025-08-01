@@ -1,3 +1,16 @@
-{
-  "branches": ["main"]
-}
+branches:
+  - main
+repository: https://github.com/JEpifanio90/KairosCli
+plugins:
+  - '@semantic-release/commit-analyzer'
+  - '@semantic-release/release-notes-generator'
+  - - '@semantic-release/github'
+    - assets:
+        - path: target/release/kairos_cli
+          label: kairos
+  - - '@semantic-release/exec'
+    - prepareCmd: cargo set-version ${nextRelease.version}
+  - - '@semantic-release/git'
+    - assets:
+        - Cargo.toml
+      message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
