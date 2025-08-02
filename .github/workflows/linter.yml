@@ -1,0 +1,13 @@
+name: Linter
+
+on:
+  pull_request: { }
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Lint Project
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings

@@ -10,8 +10,23 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout
+      - name: Lint Project
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Test Project
+        run: cargo test
   build:
-    # This job builds the Rust project and uploads the binary as an artifact.
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,10 +38,7 @@ jobs:
         with:
           name: kairos
           path: target/release/kairos_cli
-
   release:
-    # This job runs after the 'build' job has successfully completed.
-    # It downloads the artifact and then creates a release using semantic-release.
     needs: build
     runs-on: ubuntu-latest
     permissions:

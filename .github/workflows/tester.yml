@@ -1,0 +1,13 @@
+name: Tester
+
+on:
+  pull_request: { }
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Test project
+        run: cargo test
