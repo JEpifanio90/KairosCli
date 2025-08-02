@@ -3,11 +3,25 @@ name: Tester
 on:
   pull_request: { }
 
+
+# ensure that the workflow is only triggered once per PR, subsequent pushes to the PR will cancel
+# and restart the workflow. See https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   tester:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    name: test ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest, windows-latest ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Test project
-        run: cargo test
+      - name: Test Project
+        run: cargo test --locked --all-features --all-targets
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2

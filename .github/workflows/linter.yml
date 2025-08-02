@@ -3,11 +3,26 @@ name: Linter
 on:
   pull_request: { }
 
+# ensure that the workflow is only triggered once per PR, subsequent pushes to the PR will cancel
+# and restart the workflow. See https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   linter:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Lint Project
-        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - name: Run clippy action
+        uses: clechasseur/rs-clippy-check@v3
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
