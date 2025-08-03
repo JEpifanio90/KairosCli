@@ -1,101 +1,61 @@
-use color_eyre::Result;
-use crossterm::event::{Event, EventStream, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
-use futures::{FutureExt, StreamExt};
-use ratatui::{
-  DefaultTerminal, Frame,
-  style::Stylize,
-  text::Line,
-  widgets::{Block, Paragraph},
-};
+use std::path::PathBuf;
 
-#[tokio::main]
-async fn main() -> color_eyre::Result<()> {
-  color_eyre::install()?;
-  let terminal = ratatui::init();
-  let result = App::new().run(terminal).await;
-  ratatui::restore();
-  result
+use clap::{Parser, Subcommand, Command, Arg};
+
+#[derive(Parser, Debug)]
+#[command(author, version, about = "KairosOS CLI", long_about = None)]
+struct Cli {
+  /// Optional name to operate on
+  name: Option<String>,
+
+  /// Sets a custom config file
+  #[arg(short, long, value_name = "FILE")]
+  config: Option<PathBuf>,
+
+  /// Turn debugging information on
+  #[arg(short, long, action = clap::ArgAction::Count)]
+  debug: u8,
+
+  // 2. The subcommand field must be an enum with #[derive(Subcommand)].
+  #[command(subcommand)]
+  command: Option<Commands>,
 }
 
-#[derive(Debug, Default)]
-pub struct App {
-  /// Is the application running?
-  running: bool,
-  // Event stream.
-  event_stream: EventStream,
+#[derive(Subcommand, Debug)]
+enum Commands {
+  /// Prints Version
+  Version
 }
 
-impl App {
-  /// Construct a new instance of [`App`].
-  pub fn new() -> Self {
-    Self::default()
+fn main() {
+  let cli = Cli::parse();
+
+  // You can check the value provided by positional arguments, or option arguments
+  if let Some(name) = cli.name.as_deref() {
+    println!("Value for name: {name}");
   }
 
-  /// Run the application's main loop.
-  pub async fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
-    self.running = true;
-    while self.running {
-      terminal.draw(|frame| self.draw(frame))?;
-      self.handle_crossterm_events().await?;
+  if let Some(config_path) = cli.config.as_deref() {
+    println!("Value for config: {}", config_path.display());
+  }
+
+  // You can see how many times a particular flag or argument occurred
+  // Note, only flags can have multiple occurrences
+  match cli.debug {
+    0 => println!("Debug mode is off"),
+    1 => println!("Debug mode is kind of on"),
+    2 => println!("Debug mode is on"),
+    _ => println!("Don't be crazy"),
+  }
+
+  // You can check for the existence of subcommands, and if found use their
+  // matches just as you would the top level cmd
+  match &cli.command {
+    Some(Commands::Version) => {
+      let version: &str = env!("CARGO_PKG_VERSION");
+
+      println!("{version}");
     }
-    Ok(())
-  }
-
-  /// Renders the user interface.
-  ///
-  /// This is where you add new widgets. See the following resources for more information:
-  /// - <https://docs.rs/ratatui/latest/ratatui/widgets/index.html>
-  /// - <https://github.com/ratatui/ratatui/tree/master/examples>
-  fn draw(&mut self, frame: &mut Frame) {
-    let title = Line::from("Ratatui Simple Template")
-      .bold()
-      .blue()
-      .centered();
-    let text = "Hello, Ratatui!\n\n\
-            Created using https://github.com/ratatui/templates\n\
-            Press `Esc`, `Ctrl-C` or `q` to stop running.";
-    frame.render_widget(
-      Paragraph::new(text)
-        .block(Block::bordered().title(title))
-        .centered(),
-      frame.area(),
-    )
-  }
-
-  /// Reads the crossterm events and updates the state of [`App`].
-  async fn handle_crossterm_events(&mut self) -> Result<()> {
-    tokio::select! {
-        event = self.event_stream.next().fuse() => {
-            if let Some(Ok(evt)) = event {
-                match evt {
-                    Event::Key(key)
-                        if key.kind == KeyEventKind::Press
-                            => self.on_key_event(key),
-                    Event::Mouse(_) => {}
-                    Event::Resize(_, _) => {}
-                    _ => {}
-                }
-            }
-        }
-        _ = tokio::time::sleep(tokio::time::Duration::from_millis(100)) => {
-            // Sleep for a short duration to avoid busy waiting.
-        }
-    }
-    Ok(())
-  }
-
-  /// Handles the key events and updates the state of [`App`].
-  fn on_key_event(&mut self, key: KeyEvent) {
-    match (key.modifiers, key.code) {
-      (_, KeyCode::Esc | KeyCode::Char('q'))
-      | (KeyModifiers::CONTROL, KeyCode::Char('c') | KeyCode::Char('C')) => self.quit(),
-      // Add other key handlers here.
-      _ => {}
-    }
-  }
-
-  /// Set running to false to quit the application.
-  fn quit(&mut self) {
-    self.running = false;
+    None => {}
   }
 }
