@@ -1,6 +1,6 @@
 [package]
 name = "kairos_cli"
-version = "1.0.2"
+version = "1.1.0"
 edition = "2024"
 authors = ["Jose Epifanio"]
 description = "An AI-powered CLI for code analysis and refactoring."
